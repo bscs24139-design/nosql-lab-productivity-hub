@@ -236,9 +236,30 @@ async function createTask(db, taskData) {
  * Hint: updateOne + $set.
  */
 async function updateTaskStatus(db, taskId, newStatus) {
-  // TODO: implement
-  throw new Error('updateTaskStatus not implemented');
+  const result = await db.collection("tasks").updateOne(
+    { _id: taskId },
+    { $set: { status: newStatus } }
+  );
+
+  return {
+    matchedCount: result.matchedCount,
+    modifiedCount: result.modifiedCount
+  };
 }
+
+async function addTaskTag(db, taskId, tag) {
+  const result = await db.collection("tasks").updateOne(
+    { _id: taskId },
+    { $addToSet: { tags: tag } }
+  );
+
+  return {
+    matchedCount: result.matchedCount,
+    modifiedCount: result.modifiedCount
+  };
+}
+
+
 
 /**
  * Query 9: addTaskTag
@@ -256,11 +277,6 @@ async function updateTaskStatus(db, taskId, newStatus) {
  *
  * Hint: which array operator silently skips duplicates? It is NOT $push.
  */
-async function addTaskTag(db, taskId, tag) {
-  // TODO: implement
-  throw new Error('addTaskTag not implemented');
-}
-
 /**
  * Query 10: removeTaskTag
  * -------------------------------------------------------------
@@ -278,8 +294,15 @@ async function addTaskTag(db, taskId, tag) {
  * Hint: $pull.
  */
 async function removeTaskTag(db, taskId, tag) {
-  // TODO: implement
-  throw new Error('removeTaskTag not implemented');
+  const result = await db.collection("tasks").updateOne(
+    { _id: taskId },
+    { $pull: { tags: tag } }
+  );
+
+  return {
+    matchedCount: result.matchedCount,
+    modifiedCount: result.modifiedCount
+  };
 }
 
 /**
