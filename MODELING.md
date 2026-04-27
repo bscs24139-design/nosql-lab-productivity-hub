@@ -20,7 +20,7 @@ Briefly describe each collection (1–2 sentences each):
 For each collection, write the document shape (field name + type + required/optional):
 
 ### users
-
+```
 {
   _id: ObjectId,
   email: string (required, unique),
@@ -28,9 +28,11 @@ For each collection, write the document shape (field name + type + required/opti
   name: string (required),
   createdAt: Date (required)
 }
+```
 
 
 ### projects
+```
 {
   _id: ObjectId,
   ownerId: ObjectId (required),
@@ -39,9 +41,9 @@ For each collection, write the document shape (field name + type + required/opti
   archived: boolean (required, default: false),
   createdAt: Date (required)
 }
-
+```
 ### tasks
-'''
+```
 {
   _id: ObjectId,
   ownerId: ObjectId (required),
@@ -58,9 +60,10 @@ For each collection, write the document shape (field name + type + required/opti
   ] (optional, default: []),
   createdAt: Date (required)
 }
-'''
+```
 
 ### notes
+```
 {
   _id: ObjectId,
   text: string (required),
@@ -68,7 +71,7 @@ For each collection, write the document shape (field name + type + required/opti
   projectId: ObjectId (optional),
   createdAt: Date (optional)
 }
-
+```
 ## 3. Embed vs Reference — Decisions
 
 For each relationship, state whether you embedded or referenced, and **why** (one sentence):
