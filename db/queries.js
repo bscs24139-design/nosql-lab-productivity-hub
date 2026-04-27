@@ -125,6 +125,7 @@ async function createProject(db, projectData) {
   return { insertedId: result.insertedId };
 }
 
+
 /**
  * Query 5: archiveProject
  * -------------------------------------------------------------
@@ -141,8 +142,15 @@ async function createProject(db, projectData) {
  * Hint: updateOne with the $set operator.
  */
 async function archiveProject(db, projectId) {
-  // TODO: implement
-  throw new Error('archiveProject not implemented');
+  const result = await db.collection("projects").updateOne(
+    { _id: projectId },
+    { $set: { archived: true } }
+  );
+
+  return {
+    matchedCount: result.matchedCount,
+    modifiedCount: result.modifiedCount
+  };
 }
 
 /**
