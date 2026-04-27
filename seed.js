@@ -28,6 +28,25 @@ async function seed() {
   await db.collection("tasks").deleteMany({});
   await db.collection("notes").deleteMany({});
 
+  //users
+  const passwordHash = await bcrypt.hash("123456", 10);
+  const users = await db.collection("users").insertMany([
+    {
+      _id: new ObjectId(),
+      name: "Ali",
+      email: "ali@gmail.com",
+      passwordHash: passwordHash
+    },
+    {
+      _id: new ObjectId(),
+      name: "Sara",
+      email: "sara@gmail.com",
+      passwordHash: passwordHash
+    }
+  ]);
+
+  const user1 = users.insertedIds[0];
+  const user2 = users.insertedIds[1];
 }
 
 (async () => {
