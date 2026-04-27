@@ -42,10 +42,10 @@ For each collection, write the document shape (field name + type + required/opti
 
 ### tasks
 {
-  _id:ObjectId,
-  ownerId: ObjectId(required),
-  projectId:ObjectId(required),
-  title:string(required),
+  _id: ObjectId,
+  ownerId: ObjectId (required),
+  projectId: ObjectId (required),
+  title: string (required),
   status: string (required, "todo" | "in-progress" | "done"),
   priority: number (optional, default: 1),
   tags: [string] (optional, default: []),
@@ -59,11 +59,13 @@ For each collection, write the document shape (field name + type + required/opti
 }
 
 ### notes
-```
-TODO
-```
-
----
+{
+  _id: ObjectId,
+  text: string (required),
+  ownerId: ObjectId (optional but recommended),
+  projectId: ObjectId (optional),
+  createdAt: Date (optional)
+}
 
 ## 3. Embed vs Reference — Decisions
 
@@ -71,10 +73,10 @@ For each relationship, state whether you embedded or referenced, and **why** (on
 
 | Relationship                       | Embed or Reference? | Why? |
 |-----------------------------------|---------------------|------|
-| Subtasks inside a task            |                     |      |
-| Tags on a task                    |                     |      |
-| Project → Task ownership          |                     |      |
-| Note → optional Project link      |                     |      |
+| Subtasks inside a task            |  Embed              |Because subtasks are tightly coupled with a task and always accessed together |
+| Tags on a task                    |  Embed              |Tags are small , simple and can belong to any task      |
+| Project → Task ownership          |  Reference          |Tasks can be high in number so if we store them sepraretly it will avoid large documents      |
+| Note → optional Project link      |  Reference          |It is not necessary for notes to belong to a project , it is optional      |
 
 ---
 
