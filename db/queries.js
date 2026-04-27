@@ -44,8 +44,14 @@ const { ObjectId } = require('mongodb');
  * Hint: insertOne. Nothing fancy.
  */
 async function signupUser(db, userData) {
-  // TODO: implement
-  throw new Error('signupUser not implemented');
+  const result = await db.collection("users").insertOne({
+    email: userData.email,
+    passwordHash: userData.passwordHash,
+    name: userData.name,
+    createdAt: new Date()
+  });
+
+  return { insertedId: result.insertedId };
 }
 
 /**
@@ -102,8 +108,9 @@ async function listUserProjects(db, ownerId) {
  * Hint: insertOne again — just remember to add the defaults yourself.
  */
 async function createProject(db, projectData) {
-  // TODO: implement
-  throw new Error('createProject not implemented');
+  const user = await db.collection("users").findOne({ email });
+  console.log("DEBUG USER:", user);
+  return user;
 }
 
 /**
