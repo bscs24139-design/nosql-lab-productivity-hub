@@ -13,6 +13,10 @@
 //  Use ObjectId references for relationships (projectId, ownerId).
 // =============================================================================
 
+const { ObjectId } = require("mongodb");
+const bcrypt = require("bcryptjs");
+const { connect, getDb } = require("./db/connection");
+
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const { connect } = require('./db/connection');
