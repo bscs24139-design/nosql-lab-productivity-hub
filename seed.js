@@ -28,6 +28,9 @@ async function seed() {
   await db.collection("tasks").deleteMany({});
   await db.collection("notes").deleteMany({});
 
+  // this will ensure duplicate emails are rejected by Query 1.
+  await db.collection("users").createIndex({ email: 1 }, { unique: true });
+
   //users
   const passwordHash = await bcrypt.hash("123456", 10);
   const users = await db.collection("users").insertMany([
@@ -36,12 +39,14 @@ async function seed() {
       name: "Ali",
       email: "ali@gmail.com",
       passwordHash: passwordHash
+      createdAt: new Date("2026-04-20T08:00:00Z")
     },
     {
       _id: new ObjectId(),
       name: "Sara",
       email: "sara@gmail.com",
       passwordHash: passwordHash
+      createdAt: new Date("2026-04-21T08:00:00Z")
     }
   ]);
 
