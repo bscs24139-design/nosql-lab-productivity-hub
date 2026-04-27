@@ -83,5 +83,8 @@ For each relationship, state whether you embedded or referenced, and **why** (on
 ## 4. Schema Flexibility Example
 
 Name one field that exists on **some** documents but not **all** in the same collection. Explain why this is acceptable (or even useful) in MongoDB.
+projectId in notes is a flexible field.
+SOme notes have projectId which is linked to a project.
+Some notes do not have it and they are standalone notes.
 
 > _Your answer here._
