@@ -57,6 +57,64 @@ async function seed() {
   ]);
 
   const projectIds = Object.values(projects.insertedIds);
+
+  //tasks
+  await db.collection("tasks").insertMany([
+    {
+      title: "Setup frontend",
+      projectId: projectIds[0],
+      status: "todo",
+      priority: 1,
+      tags: ["frontend"],
+      subtasks: [
+        { title: "Design UI", done: false },
+        { title: "Setup React", done: false }
+      ]
+    },
+    {
+      title: "Build API",
+      projectId: projectIds[0],
+      status: "in-progress",
+      priority: 2,
+      tags: ["backend"],
+      subtasks: [
+        { title: "Create routes", done: false }
+      ]
+    },
+    {
+      title: "Train model",
+      projectId: projectIds[1],
+      status: "todo",
+      priority: 3,
+      tags: ["ml"],
+      subtasks: [
+        { title: "Collect data", done: false }
+      ]
+    },
+    {
+      title: "Deploy app",
+      projectId: projectIds[2],
+      status: "todo",
+      priority: 2,
+      tags: ["devops"],
+      subtasks: [
+        { title: "Setup server", done: false }
+      ]
+    },
+    {
+      title: "Write documentation",
+      projectId: projectIds[3],
+      status: "done",
+      priority: 1,
+      tags: ["docs"],
+      subtasks: [
+        { title: "API docs", done: true }
+      ]
+    }
+  ]);
+
+  //notes
+  
 }
 
 (async () => {
