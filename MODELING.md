@@ -41,6 +41,7 @@ For each collection, write the document shape (field name + type + required/opti
 }
 
 ### tasks
+'''
 {
   _id: ObjectId,
   ownerId: ObjectId (required),
@@ -57,6 +58,7 @@ For each collection, write the document shape (field name + type + required/opti
   ] (optional, default: []),
   createdAt: Date (required)
 }
+'''
 
 ### notes
 {
