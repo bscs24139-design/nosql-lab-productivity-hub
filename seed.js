@@ -17,9 +17,18 @@ const { ObjectId } = require("mongodb");
 const bcrypt = require("bcryptjs");
 const { connect, getDb } = require("./db/connection");
 
-require('dotenv').config();
-const bcrypt = require('bcryptjs');
-const { connect } = require('./db/connection');
+async function seed() {
+  await connect();
+  const db = getDb();
+
+  console.log("Connected to DB");
+  //clearing old data 
+  await db.collection("users").deleteMany({});
+  await db.collection("projects").deleteMany({});
+  await db.collection("tasks").deleteMany({});
+  await db.collection("notes").deleteMany({});
+
+}
 
 (async () => {
   const db = await connect();
