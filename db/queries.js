@@ -332,8 +332,22 @@ async function removeTaskTag(db, taskId, tag) {
  *       matched), and your $set path uses `subtasks.$.done`.
  */
 async function toggleSubtask(db, taskId, subtaskTitle, newDone) {
-  // TODO: implement
-  throw new Error('toggleSubtask not implemented');
+  const result = await db.collection("tasks").updateOne(
+    {
+      _id: taskId,
+      "subtasks.title": subtaskTitle
+    },
+    {
+      $set: {
+        "subtasks.$.done": newDone
+      }
+    }
+  );
+
+  return {
+    matchedCount: result.matchedCount,
+    modifiedCount: result.modifiedCount
+  };
 }
 
 /**
@@ -347,10 +361,23 @@ async function toggleSubtask(db, taskId, subtaskTitle, newDone) {
  *
  * Hint: deleteOne.
  */
+
+/**
+ * Query 12: deleteTask
+ * -------------------------------------------------------------
+ * Permanently delete a task.
+ *
+ * @param {Db} db
+ * @param {ObjectId} taskId
+ * @returns {Promise<{ deletedCount: number }>}
+ *
+ * Hint: deleteOne.
+ */
 async function deleteTask(db, taskId) {
-  // TODO: implement
-  throw new Error('deleteTask not implemented');
+  const result = await db.collection("tasks").deleteOne({ _id: taskId });
+  return { deletedCount: result.deletedCount };
 }
+
 
 /**
  * Query 13: searchNotes
@@ -372,8 +399,19 @@ async function deleteTask(db, taskId) {
  *       Build the filter conditionally based on whether projectId was passed.
  */
 async function searchNotes(db, ownerId, tags, projectId) {
-  // TODO: implement
-  throw new Error('searchNotes not implemented');
+  const filter = {
+    ownerId,
+    tags: { $in: tags }
+  };
+
+  if (projectId) {
+    filter.projectId = projectId;
+  }
+
+  return db.collection("notes")
+    .find(filter)
+    .sort({ createdAt: -1 })
+    .toArray();
 }
 
 /**
@@ -410,8 +448,55 @@ async function searchNotes(db, ownerId, tags, projectId) {
  *       $unwind turns a 1-element array into the element itself.
  */
 async function projectTaskSummary(db, ownerId) {
-  // TODO: implement
-  throw new Error('projectTaskSummary not implemented');
+  return await db.collection("tasks").aggregate([
+    {
+      $match: {
+        ownerId: ownerId   // ✅ FIXED
+      }
+    },
+    {
+      $group: {
+        _id: "$projectId",   // ⚠️ ensure field name is correct
+        todo: {
+          $sum: {
+            $cond: [{ $eq: ["$status", "todo"] }, 1, 0]
+          }
+        },
+        inProgress: {
+          $sum: {
+            $cond: [{ $eq: ["$status", "in-progress"] }, 1, 0]
+          }
+        },
+        done: {
+          $sum: {
+            $cond: [{ $eq: ["$status", "done"] }, 1, 0]
+          }
+        },
+        total: { $sum: 1 }
+      }
+    },
+    {
+      $lookup: {
+        from: "projects",
+        localField: "_id",
+        foreignField: "_id",
+        as: "project"
+      }
+    },
+    {
+      $unwind: "$project"
+    },
+    {
+      $project: {
+        _id: 1,
+        projectName: "$project.name",
+        todo: 1,
+        inProgress: 1,
+        done: 1,
+        total: 1
+      }
+    }
+  ]).toArray();
 }
 
 /**
@@ -443,8 +528,54 @@ async function projectTaskSummary(db, ownerId) {
  *       you only want to look up 10 projects, not all of them.
  */
 async function recentActivityFeed(db, ownerId) {
-  // TODO: implement
-  throw new Error('recentActivityFeed not implemented');
+  return await db.collection("tasks").aggregate([
+    // 1. Only this user's tasks
+    {
+      $match: {
+        ownerId
+      }
+    },
+
+    // 2. Sort newest first
+    {
+      $sort: {
+        createdAt: -1
+      }
+    },
+
+    // 3. Limit to 10
+    {
+      $limit: 10
+    },
+
+    // 4. Join projects
+    {
+      $lookup: {
+        from: "projects",
+        localField: "projectId",
+        foreignField: "_id",
+        as: "project"
+      }
+    },
+
+    // 5. Flatten project array
+    {
+      $unwind: "$project"
+    },
+
+    // 6. Shape output
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        status: 1,
+        priority: 1,
+        createdAt: 1,
+        projectId: 1,
+        projectName: "$project.name"
+      }
+    }
+  ]).toArray();
 }
 
 // =============================================================================
