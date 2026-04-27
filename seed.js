@@ -114,46 +114,36 @@ async function seed() {
   ]);
 
   //notes
-  
+  await db.collection("notes").insertMany([
+    {
+      text: "General idea for system design",
+      ownerId: user1
+    },
+    {
+      text: "Project meeting notes",
+      projectId: projectIds[0],
+      ownerId: user1
+    },
+    {
+      text: "AI model ideas",
+      projectId: projectIds[1],
+      ownerId: user1
+    },
+    {
+      text: "Mobile UX improvements",
+      projectId: projectIds[2],
+      ownerId: user2
+    },
+    {
+      text: "Random standalone note"
+    }
+  ]);
+
+  console.log("Seed completed successfully");
+  process.exit(0);
 }
 
-(async () => {
-  const db = await connect();
-
-  // OPTIONAL: clear existing data so re-seeding is idempotent
-  // await db.collection('users').deleteMany({});
-  // await db.collection('projects').deleteMany({});
-  // await db.collection('tasks').deleteMany({});
-  // await db.collection('notes').deleteMany({});
-
-  // =============================================================================
-  //  TODO: Insert your seed data below.
-  //
-  //  Hints:
-  //    - Hash passwords:   const hash = await bcrypt.hash('password123', 10);
-  //    - Capture inserted ids:
-  //        const u = await db.collection('users').insertOne({ ... });
-  //        const userId = u.insertedId;
-  //    - Use those ids when inserting projects/tasks/notes.
-  //    - Demonstrate schema flexibility: include at least one optional field
-  //      on SOME documents but not all (e.g. dueDate on some tasks only).
-  //
-  //  Sample task shape:
-  //    {
-  //      ownerId: <ObjectId>,
-  //      projectId: <ObjectId>,
-  //      title: "Write report introduction",
-  //      status: "todo",
-  //      priority: 3,
-  //      tags: ["writing", "urgent"],
-  //      subtasks: [
-  //        { title: "Outline sections", done: true },
-  //        { title: "Draft", done: false }
-  //      ],
-  //      createdAt: new Date()
-  //    }
-  // =============================================================================
-
-  console.log('TODO: implement seed.js');
-  process.exit(0);
-})();
+seed().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
