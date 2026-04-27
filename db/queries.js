@@ -70,7 +70,8 @@ async function signupUser(db, userData) {
  * Hint: findOne with an exact-match filter.
  */
 async function loginFindUser(db, email) {
-  return await db.collection("users").findOne({ email });
+  const user = await db.collection("users").findOne({ email });
+  return user;
 }
 
 /**
@@ -89,8 +90,14 @@ async function loginFindUser(db, email) {
  * Hint: find with two filter conditions, then .sort().toArray().
  */
 async function listUserProjects(db, ownerId) {
-  // TODO: implement
-  throw new Error('listUserProjects not implemented');
+  return await db
+    .collection("projects")
+    .find({
+      ownerId: ownerId,
+      archived: false
+    })
+    .sort({ createdAt: -1 })
+    .toArray();
 }
 
 /**
@@ -107,9 +114,15 @@ async function listUserProjects(db, ownerId) {
  * Hint: insertOne again — just remember to add the defaults yourself.
  */
 async function createProject(db, projectData) {
-  const user = await db.collection("users").findOne({ email });
-  console.log("DEBUG USER:", user);
-  return user;
+ const result = await db.collection("projects").insertOne({
+    ownerId: projectData.ownerId,
+    name: projectData.name,
+    description: projectData.description || "",
+    archived: false,
+    createdAt: new Date()
+  });
+
+  return { insertedId: result.insertedId };
 }
 
 /**
