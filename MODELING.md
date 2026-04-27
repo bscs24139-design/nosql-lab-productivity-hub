@@ -8,19 +8,19 @@
 
 Briefly describe each collection (1–2 sentences each):
 
-- **users** —
-- **projects** —
-- **tasks** —
-- **notes** —
+- **users** — This collection is used to store user accounts which inlcudes login credentials.Every user owns projects , tasks and notes.
+- **projects** — THis collection represents a collection of tasks which actually belongs to the user and these projects can be archived rather than be deleted.
+- **tasks** — This stores individual work which is linked to a project including status,priority taks.
+- **notes** —This will store textual notes created by user . Notes can also be linked to a project but it is not necessary.
 
 ---
 
 ## 2. Document Shapes
-
+  
 For each collection, write the document shape (field name + type + required/optional):
 
 ### users
-```
+
 {
   _id: ObjectId,
   email: string (required, unique),
@@ -28,7 +28,7 @@ For each collection, write the document shape (field name + type + required/opti
   name: string (required),
   createdAt: Date (required)
 }
-```
+
 
 ### projects
 ```
