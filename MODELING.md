@@ -31,14 +31,32 @@ For each collection, write the document shape (field name + type + required/opti
 
 
 ### projects
-```
-TODO
-```
+{
+  _id: ObjectId,
+  ownerId: ObjectId (required),
+  name: string (required),
+  description: string (optional),
+  archived: boolean (required, default: false),
+  createdAt: Date (required)
+}
 
 ### tasks
-```
-TODO
-```
+{
+  _id:ObjectId,
+  ownerId: ObjectId(required),
+  projectId:ObjectId(required),
+  title:string(required),
+  status: string (required, "todo" | "in-progress" | "done"),
+  priority: number (optional, default: 1),
+  tags: [string] (optional, default: []),
+  subtasks: [
+    {
+      title: string,
+      done: boolean
+    }
+  ] (optional, default: []),
+  createdAt: Date (required)
+}
 
 ### notes
 ```
