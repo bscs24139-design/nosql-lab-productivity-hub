@@ -47,6 +47,16 @@ async function seed() {
 
   const user1 = users.insertedIds[0];
   const user2 = users.insertedIds[1];
+
+  //projects 
+   const projects = await db.collection("projects").insertMany([
+    { _id: new ObjectId(), name: "Web App", ownerId: user1 },
+    { _id: new ObjectId(), name: "AI System", ownerId: user1 },
+    { _id: new ObjectId(), name: "Mobile App", ownerId: user2 },
+    { _id: new ObjectId(), name: "Portfolio", ownerId: user2 }
+  ]);
+
+  const projectIds = Object.values(projects.insertedIds);
 }
 
 (async () => {
